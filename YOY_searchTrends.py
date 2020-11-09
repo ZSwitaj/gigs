@@ -2,28 +2,48 @@ import pandas as pd
 from pytrends.request import TrendReq
 from datetime import date
 
+
 def getTrendData(keyword):
+
+    """
+
+    Parameters
+    ----------
+    keyword : str
+        Keyword to get trend data for
+
+    Returns
+    -------
+    yoyIncrease : float
+        Year-over-year increase for given keyword
+
+    """
 
     dataset= []
     
-    end_date = date(2020,10,24)
-    start_date = date(2019, 9, 29)
+    #Start date of last year's time frame
+    start_date = date(2019, 9, 1)
+    
+    #End date of this year's time frame
+    end_date = date(2020,9,26)
+    
+    
     timeFrame = start_date.strftime('%Y-%m-%d')+' ' + end_date.strftime("%Y-%m-%d")
     
-    pytrends = TrendReq(hl='en-US', tz=360)
+    pytrends = TrendReq(hl='en-US', tz=360) #Create pytrend query
     
-    pytrends.build_payload(kw_list = [keyword],
-                            timeframe = timeFrame,
-                            geo = 'US')
-    data = pytrends.interest_over_time()
+    pytrends.build_payload(kw_list = [keyword],      # Build payload
+                            timeframe = timeFrame,   # Timeframe from above
+                            geo = 'US')              # US only, remove for global
+    data = pytrends.interest_over_time()             # Pull data from query
     if not data.empty:
         data = data.drop(labels = ['isPartial'], axis ='columns')
-        dataset.append(data)
+        dataset.append(data)                         # Cleaning df
             
     dataset = pd.concat(dataset, axis = 1)
     
-    lastYear = dataset.head(4)
-    thisYear = dataset.tail(4)
+    lastYear = dataset.head(4)                      #Last year's data is first four weeks of df
+    thisYear = dataset.tail(4)                      #This year's data is last four weeks of df
     
     df = pd.DataFrame()
     df = df.append(lastYear)
@@ -34,6 +54,14 @@ def getTrendData(keyword):
     return yoyIncrease
 
 def getSuggestions(keyword):
+    
+    """
+    Parameters:
+    Keyword (str): Keyword to look for suggestions for
+    
+    Returns:
+    df: Dateframe of suggesionts, where mid is keyword ID for associated type
+    """
     
     pytrends = TrendReq(hl='en-US', tz=360)
     
@@ -64,7 +92,7 @@ kw_dict = {
     "REI": "/m/02nx4d",
     "Dick's Sports": "/m/06fgv_",
     "Boot": "/m/01b638",
-    "Outerwear": "/m/047vlmn"
+    "Outerwear": "Outerwear"
     }
 
 lst_keywords = []
