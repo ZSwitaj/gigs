@@ -76,8 +76,9 @@ for topic in kw_dict:
 
 lst_values = []
 
-print("Calculating...")
+# print("Calculating...")
 for topic in kw_dict:
+    print("Calculting {} results".format(topic))
     lst_values.append(round(getTrendData(kw_dict[topic]),1))
 
 print("Combining...")
@@ -85,7 +86,7 @@ res = dict(zip(lst_keywords, lst_values))
 res_df = pd.DataFrame.from_dict(res, orient = 'index', columns = ['YOY Change'])
 res_df = res_df.transpose()
 
-res_df.to_csv(r'output.csv')
+# res_df.to_csv(r'output.csv')
 
     
     
